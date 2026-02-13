@@ -9,15 +9,12 @@
 :root{
     --azul:#007bff;
     --verde:#28a745;
-    --fundo:url('fundo.jpg');
 }
 
 body{
     margin:0;
     font-family:Segoe UI, sans-serif;
-    background:linear-gradient(rgba(255,255,255,.9),rgba(255,255,255,.9)), var(--fundo);
-    background-size:cover;
-    background-position:center;
+    background:#eef2f7;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -45,8 +42,6 @@ button{
     color:#fff;
 }
 
-button:hover{opacity:.9}
-
 /* CORPO */
 #container{
     position:relative;
@@ -60,68 +55,47 @@ button:hover{opacity:.9}
     display:block;
 }
 
+/* ÁREA INVISÍVEL */
 .membro{
     position:absolute;
-    background:rgba(0,123,255,.25);
-    border:1px solid var(--azul);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:11px;
+    background:transparent;
+    border:2px solid transparent;
     cursor:pointer;
     transition:.2s;
 }
 
-/* TOOLTIP */
-.membro::after{
-    content:attr(data-nome);
-    position:absolute;
-    bottom:100%;
-    left:50%;
-    transform:translateX(-50%);
-    background:#000;
-    color:#fff;
-    padding:4px 6px;
-    border-radius:4px;
-    font-size:11px;
-    white-space:nowrap;
-    opacity:0;
-    pointer-events:none;
+/* APARECE SOMENTE AO PASSAR O MOUSE */
+.membro:hover{
+    background:rgba(0,123,255,.35);
+    border:2px solid var(--azul);
 }
 
-.membro:hover::after{
-    opacity:1;
+/* MOBILE - QUANDO TOCAR */
+.membro.touch-hover{
+    background:rgba(0,123,255,.35);
+    border:2px solid var(--azul);
 }
 
 /* SELECIONADO */
 .membro.selected{
-    background:rgba(40,167,69,.6);
-    border:2px solid var(--verde);
+    background:rgba(40,167,69,.6) !important;
+    border:2px solid var(--verde) !important;
 }
 
-.membro.selected::before{
+.membro.selected::after{
     content:"✔";
     position:absolute;
     top:2px;
     right:4px;
-    color:green;
     font-weight:bold;
-}
-
-/* RELATÓRIO */
-#relatorio{
-    margin-top:20px;
-    width:90%;
-    max-width:500px;
-    background:#fff;
-    padding:15px;
-    border-radius:8px;
-    box-shadow:0 2px 8px rgba(0,0,0,.1);
-    display:none;
+    color:green;
+    font-size:16px;
 }
 
 @media(max-width:600px){
-    #container{width:95vw}
+    #container{
+        width:95vw;
+    }
 }
 </style>
 </head>
@@ -130,55 +104,37 @@ button:hover{opacity:.9}
 <div class="topbar">
     <button onclick="toggleSide()">Trocar Frente/Costas</button>
     <button onclick="limpar()">Limpar</button>
-    <button onclick="gerarRelatorio()">Gerar Relatório</button>
 </div>
 
-  <div class="viewport">
-    <div id="corpo-container">
-        <img id="body-img" src="tras.png" alt="Corpo Humano">
-        
-        <div class="membro frente" data-nome="Cabeça" style="top: 7.7%; left: 44.1%; width: 12%; height: 5%; display: none;">Cabeça</div>
-        <div class="membro frente" data-nome="Pescoço" style="top: 15.7%; left: 46%; width: 8%; height: 3%; display: none;">Pesc</div>
-        <div class="membro frente" data-nome="Peito" style="top: 21.4%; left: 42.3%; width: 16%; height: 7%; display: none;">Peito</div>
-        <div class="membro frente" data-nome="Abdômen" style="top: 29.5%; left: 41.6%; width: 16%; height: 8%; display: none;">Abdô</div>
-        <div class="membro frente" data-nome="Pelvis" style="top: 40.8%; left: 43.6%; width: 12%; height: 6%; display: none;">Pelv</div>
-        <div class="membro frente" data-nome="Coxa Esquerda" style="top: 49.4%; left: 51.5%; width: 10%; height: 13%; display: none;">Coxa E</div>
-        <div class="membro frente" data-nome="Coxa Direita" style="top: 49%; left: 37.4%; width: 10%; height: 13%; display: none;">Coxa D</div>
-        <div class="membro frente" data-nome="Joelho Esquerdo" style="top: 65.4%; left: 50.6%; width: 9%; height: 5%; display: none;">Jol E</div>
-        <div class="membro frente" data-nome="Joelho Direito" style="top: 65%; left: 38.5%; width: 9.5%; height: 5.5%; display: none;">Jol D</div>
-        <div class="membro frente" data-nome="Perna Inferior Esquerda" style="top: 72.4%; left: 50.6%; width: 10%; height: 10%; display: none;">Pern E</div>
-        <div class="membro frente" data-nome="Perna Inferior Direita" style="top: 72.1%; left: 38%; width: 10%; height: 10%; display: none;">Pern D</div>
-        <div class="membro frente" data-nome="Pé Esquerdo" style="top: 84.4%; left: 51.6%; width: 9.5%; height: 7%; display: none;">Pé E</div>
-        <div class="membro frente active" data-nome="Pé Direito" style="top: 85.1%; left: 39.3%; width: 11%; height: 6%; display: none;">Pé D</div>
-        <div class="membro frente" data-nome="Ombro Esquerdo" style="top: 17.9%; left: 59.3%; width: 14%; height: 5%; display: none;">Omb E</div>
-        <div class="membro frente" data-nome="Ombro Direito" style="top: 18.1%; left: 26%; width: 15%; height: 5%; display: none;">Omb D</div>
-        <div class="membro frente" data-nome="Antebraço Esquerdo" style="top: 26.3%; left: 24.8%; width: 8%; height: 8%; display: none;">Ant E</div>
-        <div class="membro frente" data-nome="Antebraço Direito" style="top: 26.8%; left: 66.4%; width: 8%; height: 8%; display: none;">Ant D</div>
-        <div class="membro frente" data-nome="Mão Esquerda" style="top: 47.6%; left: 69.3%; width: 11%; height: 7%; display: none;">Mão E</div>
-        <div class="membro frente" data-nome="Mão Direita" style="top: 48%; left: 19.8%; width: 11.5%; height: 6%; display: none;">Mão D</div>
+<div id="container">
+    <img id="body-img" src="frente.png">
 
-        <div class="membro costas active" data-nome="Cabeça (Nuca)" style="top: 21.4%; left: 42.1%; width: 12%; height: 5%; display: flex;">Nuca</div>
-        <div class="membro costas" data-nome="Costas Superiores" style="top: 29.5%; left: 41.1%; width: 16%; height: 7%; display: flex;">C.Sup</div>
-        <div class="membro costas" data-nome="Costas Inferiores" style="top: 38.6%; left: 40.3%; width: 16%; height: 8%; display: flex;">C.Inf</div>
-        <div class="membro costas" data-nome="Glúteo Esquerdo" style="top: 47.6%; left: 34.9%; width: 10%; height: 7%; display: flex;">Glu E</div>
-        <div class="membro costas" data-nome="Glúteo Direito" style="top: 48%; left: 50.7%; width: 10%; height: 7%; display: flex;">Glu D</div>
-    </div>
+    <!-- FRENTE -->
+    <div class="membro frente" style="top:7%;left:44%;width:12%;height:6%"></div>
+    <div class="membro frente" style="top:21%;left:42%;width:16%;height:8%"></div>
+    <div class="membro frente" style="top:31%;left:41%;width:18%;height:9%"></div>
+    <div class="membro frente" style="top:50%;left:52%;width:10%;height:14%"></div>
+    <div class="membro frente" style="top:50%;left:37%;width:10%;height:14%"></div>
+
+    <!-- COSTAS -->
+    <div class="membro costas" style="top:10%;left:44%;width:12%;height:6%;display:none"></div>
+    <div class="membro costas" style="top:25%;left:41%;width:18%;height:10%;display:none"></div>
+    <div class="membro costas" style="top:38%;left:41%;width:18%;height:10%;display:none"></div>
+    <div class="membro costas" style="top:50%;left:35%;width:12%;height:8%;display:none"></div>
+    <div class="membro costas" style="top:50%;left:52%;width:12%;height:8%;display:none"></div>
 </div>
-
-
-<div id="relatorio"></div>
 
 <script>
 let currentSide="frente";
 
-/* TROCAR LADO */
+/* TROCAR FRENTE/COSTAS */
 function toggleSide(){
     currentSide = currentSide==="frente"?"costas":"frente";
     document.getElementById("body-img").src =
         currentSide==="frente"?"frente.png":"tras.png";
 
     document.querySelectorAll(".membro").forEach(el=>{
-        el.style.display = el.classList.contains(currentSide) ? "flex":"none";
+        el.style.display = el.classList.contains(currentSide) ? "block":"none";
     });
 }
 
@@ -187,45 +143,24 @@ function limpar(){
     document.querySelectorAll(".membro").forEach(el=>{
         el.classList.remove("selected");
     });
-    document.getElementById("relatorio").style.display="none";
 }
 
 /* SELEÇÃO */
 document.querySelectorAll(".membro").forEach(el=>{
+
+    /* Desktop */
     el.addEventListener("click",function(){
         this.classList.toggle("selected");
     });
 
+    /* Mobile - efeito visual ao tocar */
     el.addEventListener("touchstart",function(e){
         e.preventDefault();
+        this.classList.toggle("touch-hover");
         this.classList.toggle("selected");
     });
+
 });
-
-/* GERAR RELATÓRIO */
-function gerarRelatorio(){
-    const selecionados = document.querySelectorAll(".membro.selected");
-    if(selecionados.length===0){
-        alert("Nenhuma área marcada.");
-        return;
-    }
-
-    let lista=[];
-    selecionados.forEach(el=>{
-        lista.push(el.dataset.nome);
-    });
-
-    const texto = `
-    <h3>Relatório de Lesões</h3>
-    <p><strong>Data:</strong> ${new Date().toLocaleDateString()}</p>
-    <p><strong>Áreas Marcadas:</strong></p>
-    <ul>${lista.map(item=>`<li>${item}</li>`).join('')}</ul>
-    `;
-
-    const div = document.getElementById("relatorio");
-    div.innerHTML = texto;
-    div.style.display="block";
-}
 </script>
 
 </body>
